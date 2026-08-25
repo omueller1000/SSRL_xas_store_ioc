@@ -1,0 +1,42 @@
+{
+  "prefix": "BL22:STORE:",
+  "port": 6064,
+  "pvs": [
+    {
+      "name": "CRYSTAL_D",
+      "dtype": "float",
+      "value": 3.135601,
+      "description": "Crystal Lattice D Spacing"
+    },
+    {
+      "name": "CRYSTAL_GAP",
+      "dtype": "float",
+      "value": 5.0,
+      "description": "Crystal Gap"
+    },
+    {
+      "name": "CRYSTAL_PHI",
+      "dtype": "float",
+      "value": 90,
+      "description": "Crystal Phi"
+    },
+    {
+      "name": "CRYSTAL_ENCODER_OFFSET",
+      "dtype": "float",
+      "value": 0.0,
+      "description": "Mono Encoder"
+    },
+    {
+      "name": "V1_ENCODER_OFFSET",
+      "dtype": "float",
+      "value": 0.0,
+      "description": "Table Motor V1 Encoder Offset"
+    },
+    {
+      "name": "V2_ENCODER_OFFSET",
+      "dtype": "float",
+      "value": 0.0,
+      "description": "Table Motor V2 Encoder Offset"
+    }
+  ]
+}
