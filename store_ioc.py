@@ -3,7 +3,6 @@
 
 import json
 import os
-
 from caproto.server import PVGroup, pvproperty, ioc_arg_parser, run
 
 STORE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'store.json')
@@ -13,7 +12,6 @@ DTYPES = {
     'float': float,
     'int': int,
     'str': str,
-    'bool': bool,
 }
 
 
@@ -25,10 +23,17 @@ def load_store(path=STORE_FILE):
 
 def apply_port(port):
     """Point the CA server at `port`; caproto reads this at server startup."""
+    print(f"[before] EPICS_CA_SERVER_PORT = {os.environ.get("EPICS_CA_SERVER_PORT")}")
     if port is not None:
         os.environ['EPICS_CA_SERVER_PORT'] = str(port)
+    print(f"[after] EPICS_CA_SERVER_PORT= {os.environ.get("EPICS_CA_SERVER_PORT")}")
 
-
+'''
+Libo: 
+import threading
+_store_lock=threading.Lock()
+write with _store_lock
+'''
 def save_value(pvname, value, path=STORE_FILE):
     """Write `value` into the store entry for `pvname`, leaving the rest intact."""
     with open(path) as f:
@@ -53,24 +58,19 @@ def save_value(pvname, value, path=STORE_FILE):
     return True
 
 
-def to_python(value, dtype):
-    """Coerce a caproto put payload into a plain JSON-serialisable value."""
-    if hasattr(value, 'tolist'):  # numpy array or scalar
-        value = value.tolist()
-    if isinstance(value, (list, tuple)):
-        if len(value) != 1:
-            return [to_python(item, dtype) for item in value]
-        value = value[0]
-    if isinstance(value, bytes):
-        value = value.decode()
-    return dtype(value)
 
+
+'''
+Libo
+import asyncio
+
+await asyncio.to_threading(save_value, pvname, value, path)
+'''
 
 def make_store_putter(pvname, dtype, path):
     """Build a putter that mirrors every accepted write back into the store file."""
 
-    async def putter(group, instance, value):
-        value = to_python(value, dtype)
+    async def putter(group, instance, value):        
         print(f'{instance.pvname} <- {value}')
         save_value(pvname, value, path)
         return value
@@ -105,7 +105,8 @@ if __name__ == '__main__':
         default_prefix=store.get('prefix', ''),
         desc=__doc__,
     )
-    print('CA server port:', os.environ.get('EPICS_CA_SERVER_PORT', 5064))
     ioc = StoreIOC(**ioc_options)
     print('PVs:', list(ioc.pvdb))
-    run(ioc.pvdb, **run_options)
+    run(ioc.pvdb, **run_options)    
+
+    

@@ -21,6 +21,12 @@
       "description": "Crystal Phi"
     },
     {
+      "name": "TABLE_BEAM_OFFSET",
+      "dtype": "float",
+      "value": -10.946648253683431,
+      "description": "TableVert-to-Beam Offset"
+    },
+    {
       "name": "CRYSTAL_ENCODER_OFFSET",
       "dtype": "float",
       "value": 0.0,
